@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/playground-handson-java.iml" filepath="$PROJECT_DIR$/.idea/playground-handson-java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-boot-unique-id-generator.integration.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-boot-unique-id-generator.integration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-boot-unique-id-generator.unit.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-boot-unique-id-generator.unit.iml" />
+    </modules>
+  </component>
+</project>
