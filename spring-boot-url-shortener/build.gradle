@@ -1,0 +1,70 @@
+import org.gradle.api.tasks.testing.Test
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.4'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'io.github.bluething.playground.handson'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+sourceSets {
+	integration {
+		java.srcDir file('src/test/integration/java')
+		resources.srcDir file('src/test/integration/resources')
+		compileClasspath += sourceSets.main.output
+		runtimeClasspath += sourceSets.main.output
+	}
+	unit {
+		java.srcDir file('src/test/unit/java')
+		resources.srcDir file('src/test/unit/resources')
+		compileClasspath += sourceSets.main.output
+		runtimeClasspath += sourceSets.main.output
+	}
+}
+configurations {
+	integrationImplementation.extendsFrom testImplementation
+	unitImplementation.extendsFrom testImplementation
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	integrationImplementation 'org.springframework.boot:spring-boot-starter-test'
+	unitImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+tasks.register('integration', Test) {
+	testClassesDirs = sourceSets.integration.output.classesDirs
+	classpath = sourceSets.integration.runtimeClasspath
+	useJUnitPlatform()
+}
+tasks.register('unit', Test) {
+	testClassesDirs = sourceSets.unit.output.classesDirs
+	classpath = sourceSets.unit.runtimeClasspath
+	useJUnitPlatform()
+}
