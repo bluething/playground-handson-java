@@ -18,8 +18,8 @@ class SnowflakeIdGenerator implements IdGenerator {
     private static final int MACHINE_BITS = 5;
     private static final int SEQUENCE_BITS = 12;
 
-    private static final long MAX_DATACENTER = ~(-1L << DATACENTER_BITS);
-    private static final long MAX_MACHINE = ~(-1L << MACHINE_BITS);
+    private static final long MAX_DATACENTER = -1L ^ (-1L << DATACENTER_BITS);
+    private static final long MAX_MACHINE = -1L ^ (-1L << MACHINE_BITS);
 
     // custom epoch (23 November 2023)
     private static final long DEFAULT_EPOCH = 1700672400000L;
