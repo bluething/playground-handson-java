@@ -4,7 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/playground-handson-java.iml" filepath="$PROJECT_DIR$/.idea/playground-handson-java.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-boot-unique-id-generator.integration.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-boot-unique-id-generator.integration.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-boot-unique-id-generator.main.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-boot-unique-id-generator.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spring-boot-unique-id-generator.unit.iml" filepath="$PROJECT_DIR$/.idea/modules/spring-boot-unique-id-generator.unit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/unique-id-generator-fe.iml" filepath="$PROJECT_DIR$/unique-id-generator-fe.iml" />
     </modules>
   </component>
 </project>
