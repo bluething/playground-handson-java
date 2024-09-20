@@ -48,9 +48,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	integrationImplementation 'org.springframework.boot:spring-boot-starter-test'
+	integrationImplementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	integrationImplementation 'org.postgresql:postgresql'
 	unitImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
