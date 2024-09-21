@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -27,6 +29,11 @@ class UrlShortenerEndpointTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Sql (
+            statements = "DELETE FROM url WHERE long_url = 'https://github.com/bluething'",
+            config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+    )
     @DisplayName("When we generate new shorter url, then the system must return 301 Http status code")
     @Test
     void generateShorterUrlMustReturn301HttpStatus() throws Exception {
@@ -37,6 +44,11 @@ class UrlShortenerEndpointTest {
                 .andExpect(status().isMovedPermanently());
     }
 
+    @Sql (
+            statements = "DELETE FROM url WHERE long_url = 'https://github.com/bluething'",
+            config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+    )
     @DisplayName("When we generate new shorter url, then a new row must be written in database")
     @Test
     void generateShorterUrlMustWriteOneRowInDb() throws Exception {
