@@ -1,5 +1,6 @@
 package io.github.bluething.playground.handson.springbooturlshortener.domain;
 
+import io.github.bluething.playground.handson.springbooturlshortener.config.UrlConfig;
 import io.github.bluething.playground.handson.springbooturlshortener.infrastructure.persistence.UrlEntity;
 import io.github.bluething.playground.handson.springbooturlshortener.infrastructure.persistence.UrlRepository;
 import org.junit.jupiter.api.Assertions;
@@ -21,11 +22,13 @@ class UrlServiceTest {
     private UrlRepository urlRepository;
     @Mock
     private Codec codec;
+    @Mock
+    private UrlConfig urlConfig;
     private UrlService urlService;
 
     @BeforeEach
     void setUp() {
-        urlService = new UrlService(urlRepository, codec);
+        urlService = new UrlService(urlRepository, codec, urlConfig);
     }
 
     @DisplayName("Given database sequence call, when we call generateShortenUrl it must return shorter url string")
@@ -33,8 +36,9 @@ class UrlServiceTest {
     void generateShortenUrlReturnShortenedUrlString() {
         given(urlRepository.getNextSequenceValue()).willReturn(2009215674938L);
         given(codec.encode(2009215674938L)).willReturn("zn9edcu");
+        given(urlConfig.getBaseUrl()).willReturn("http://localhost:8080/api/v1/");
 
-        Assertions.assertEquals("zn9edcu", urlService.generateShortenUrl("https://github.com/bluething"));
+        Assertions.assertEquals("http://localhost:8080/api/v1/zn9edcu", urlService.generateShortenUrl("https://github.com/bluething"));
     }
 
     @DisplayName("Given database sequence call, when we call generateShortenUrl it must call save method to database")
@@ -42,6 +46,8 @@ class UrlServiceTest {
     void generateShortenUrlMustCallSaveToDatabaseMethod() {
         given(urlRepository.getNextSequenceValue()).willReturn(2009215674938L);
         given(codec.encode(2009215674938L)).willReturn("zn9edcu");
+        given(urlConfig.getBaseUrl()).willReturn("http://localhost:8080/api/v1/");
+
         urlService.generateShortenUrl("https://github.com/bluething");
         UrlEntity urlEntity = new UrlEntity(2009215674938L, "https://github.com/bluething", "zn9edcu");
         verify(urlRepository, times(1)).save(urlEntity);
