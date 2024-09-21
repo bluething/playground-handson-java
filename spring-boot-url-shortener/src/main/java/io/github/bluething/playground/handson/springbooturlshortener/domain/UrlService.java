@@ -22,4 +22,9 @@ final class UrlService implements Url{
 
         return urlConfig.getBaseUrl() + encodedUrl;
     }
+
+    @Override
+    public String getLongUrl(String shortUrl) {
+        return urlRepository.findUrlByShortUrl(shortUrl).getLongUrl();
+    }
 }

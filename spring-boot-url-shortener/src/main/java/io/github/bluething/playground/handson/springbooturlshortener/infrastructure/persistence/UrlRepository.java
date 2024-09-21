@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface UrlRepository extends JpaRepository<UrlEntity, Long> {
     @Query(value = "SELECT nextval('sequence_url')", nativeQuery = true)
     Long getNextSequenceValue();
+
+    UrlEntity findUrlByShortUrl(String url);
 }
