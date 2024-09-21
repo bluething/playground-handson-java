@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -81,5 +82,22 @@ class UrlShortenerEndpointTest {
                 .andReturn();
 
         Assertions.assertEquals(0, result.getResponse().getContentAsString().indexOf(urlConfig.getBaseUrl()));
+    }
+
+    @Sql (
+            statements = "INSERT INTO url VALUES(2009215674938, 'https://github.com/bluething', 'zn9edcu', current_timestamp, current_timestamp)",
+            config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
+    @Sql (
+            statements = "DELETE FROM url WHERE long_url = 'https://github.com/bluething'",
+            config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+    )
+    @DisplayName("When we get long url, then the system must return 301 Http status code")
+    @Test
+    void whenWeGetLongUrlThenEndpointMustReturn301HttpStatusResponse() throws Exception {
+        mockMvc.perform(get("/api/v1/zn9edcu"))
+                .andExpect(status().isMovedPermanently());
     }
 }
