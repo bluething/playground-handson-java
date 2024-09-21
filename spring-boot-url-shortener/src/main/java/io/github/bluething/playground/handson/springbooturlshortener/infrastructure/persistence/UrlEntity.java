@@ -21,17 +21,17 @@ public class UrlEntity {
     private String longUrl;
     @Column(name = "short_url")
     private String shortUrl;
-    @Column(name = "created_at")
-    private Timestamp createdAt;
-    @Column(name = "updated_at")
-    private Timestamp updatedAt;
+    @Column(name = "created_date")
+    private Timestamp createdDate;
+    @Column(name = "updated_date")
+    private Timestamp updatedDate;
 
     public UrlEntity(Long id, String longUrl, String shortUrl) {
         this.id = id;
         this.longUrl = longUrl;
         this.shortUrl = shortUrl;
-        this.createdAt = new Timestamp(System.currentTimeMillis());
-        this.updatedAt = new Timestamp(System.currentTimeMillis());
+        this.createdDate = new Timestamp(System.currentTimeMillis());
+        this.updatedDate = new Timestamp(System.currentTimeMillis());
     }
 
     public UrlEntity() {
