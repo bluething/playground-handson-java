@@ -52,4 +52,13 @@ class UrlServiceTest {
         UrlEntity urlEntity = new UrlEntity(2009215674938L, "https://github.com/bluething", "zn9edcu");
         verify(urlRepository, times(1)).save(urlEntity);
     }
+
+    @DisplayName("Given database select call, when we call getLongUrl it must call the select method once")
+    @Test
+    void getLongUrlMustCallReadToDatabaseMethod() {
+        UrlEntity urlEntity = new UrlEntity(2009215674938L, "https://github.com/bluething", "zn9edcu");
+        given(urlRepository.findUrlByShortUrl(any())).willReturn(urlEntity);
+        urlService.getLongUrl("zn9edcu");
+        verify(urlRepository, times(1)).findUrlByShortUrl(any());
+    }
 }
