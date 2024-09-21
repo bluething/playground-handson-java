@@ -2,9 +2,12 @@ package io.github.bluething.playground.handson.springbooturlshortener.domain;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
 @Component
 public class Base62 implements Codec {
-    private static final char[] BASE62_CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+    private static final String BASE62_STRING = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final char[] BASE62_CHARS = BASE62_STRING.toCharArray();
     private static final Integer BASE62_RADIX = BASE62_CHARS.length;
 
     @Override
@@ -21,6 +24,13 @@ public class Base62 implements Codec {
 
     @Override
     public long decode(String value) {
-        return 0;
+        long result = 0;
+        long radixPower = 1L;
+        for (int i = value.length()-1; i >= 0; i--) {
+            result += radixPower * BASE62_STRING.indexOf(value.charAt(i));
+            radixPower *= BASE62_RADIX;
+        }
+        
+        return result;
     }
 }
