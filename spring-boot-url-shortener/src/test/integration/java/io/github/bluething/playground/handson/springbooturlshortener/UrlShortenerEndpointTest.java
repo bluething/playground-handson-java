@@ -16,6 +16,10 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Pattern;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,6 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class UrlShortenerEndpointTest {
+    private static final Pattern URL_PATTERN = Pattern.compile(
+            "^(http|https)://((\\w+:\\w+@)?(\\S+(\\.[\\w-]+)+))((:[0-9]+)?(/|\\?|#)(\\S+))?");
+
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -33,6 +40,10 @@ class UrlShortenerEndpointTest {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private UrlConfig urlConfig;
+
+    public static boolean isValidUrl(String url) {
+        return URL_PATTERN.matcher(url).matches();
+    }
 
     @Sql (
             statements = "DELETE FROM url WHERE long_url = 'https://github.com/bluething'",
@@ -99,5 +110,24 @@ class UrlShortenerEndpointTest {
     void whenWeGetLongUrlThenEndpointMustReturn301HttpStatusResponse() throws Exception {
         mockMvc.perform(get("/api/v1/zn9edcu"))
                 .andExpect(status().isMovedPermanently());
+    }
+
+    @Sql (
+            statements = "INSERT INTO url VALUES(2009215674938, 'https://github.com/bluething', 'zn9edcu', current_timestamp, current_timestamp)",
+            config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
+    @Sql (
+            statements = "DELETE FROM url WHERE long_url = 'https://github.com/bluething'",
+            config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+    )
+    @DisplayName("When we get long url, then the system must return header for new location contain short url")
+    @Test
+    void whenWeGetLongUrlThenEndpointMustReturnResponseWithHeaderLocationContainShortenUrl() throws Exception {
+        MvcResult result = mockMvc.perform(get("/api/v1/zn9edcu"))
+                .andReturn();
+        String longUrl = result.getResponse().getHeader("Location");
+        Assertions.assertTrue(isValidUrl(longUrl));
     }
 }
