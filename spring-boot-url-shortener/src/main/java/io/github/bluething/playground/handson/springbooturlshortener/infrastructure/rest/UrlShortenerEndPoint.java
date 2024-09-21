@@ -20,6 +20,7 @@ class UrlShortenerEndPoint {
 
     @GetMapping("/{shortUrl}")
     ResponseEntity<?> getLongUrl(@PathVariable String shortUrl) {
-        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).build();
+        String longUrl = urlService.getLongUrl(shortUrl);
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header("Location", longUrl).build();
     }
 }
