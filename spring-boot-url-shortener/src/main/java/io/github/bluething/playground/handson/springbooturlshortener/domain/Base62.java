@@ -30,7 +30,7 @@ public class Base62 implements Codec {
             result += radixPower * BASE62_STRING.indexOf(value.charAt(i));
             radixPower *= BASE62_RADIX;
         }
-        
+
         return result;
     }
 }
