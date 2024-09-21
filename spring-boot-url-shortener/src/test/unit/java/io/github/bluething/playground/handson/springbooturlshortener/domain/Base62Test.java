@@ -16,4 +16,9 @@ class Base62Test {
     void givenLongValueReturnsStringWithBase62Encode() {
         Assertions.assertEquals("zn9edcu", codec.encode(2009215674938L));
     }
+
+    @Test
+    void givenEncodedStringReturnsLongWithBase62Decode() {
+        Assertions.assertEquals(2009215674938L, codec.decode("zn9edcu"));
+    }
 }
