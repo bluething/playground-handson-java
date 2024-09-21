@@ -1,5 +1,6 @@
 package io.github.bluething.playground.handson.springbooturlshortener.domain;
 
+import io.github.bluething.playground.handson.springbooturlshortener.infrastructure.persistence.UrlEntity;
 import io.github.bluething.playground.handson.springbooturlshortener.infrastructure.persistence.UrlRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,10 @@ final class UrlService implements Url{
 
     @Override
     public String generateShortenUrl(String longUrl) {
-        String encodedUrl = codec.encode(urlRepository.getNextSequenceValue());
+        long seq = urlRepository.getNextSequenceValue();
+        String encodedUrl = codec.encode(seq);
+        UrlEntity urlEntity = new UrlEntity(seq, longUrl, encodedUrl);
+        urlRepository.save(urlEntity);
         return encodedUrl;
     }
 }
