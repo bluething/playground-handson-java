@@ -18,6 +18,6 @@ class UrlShortenerEndPoint {
     @PutMapping("/data/shorten")
     ResponseEntity<?> generateShorterUrl(@RequestBody LongUrlPayload longUrl) {
         String shortUrl = urlService.generateShortenUrl(longUrl.url());
-        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).body(shortUrl);
+        return ResponseEntity.status(HttpStatus.CREATED).body(shortUrl);
     }
 }

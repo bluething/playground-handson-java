@@ -38,14 +38,14 @@ class UrlShortenerEndpointTest {
             config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
     )
-    @DisplayName("When we generate new shorter url, then the system must return 301 Http status code")
+    @DisplayName("When we generate new shorter url, then the system must return 201 Http status code")
     @Test
-    void generateShorterUrlMustReturn301HttpStatus() throws Exception {
+    void generateShorterUrlMustReturn201HttpStatus() throws Exception {
         LongUrlPayload url = new LongUrlPayload("https://github.com/bluething");
         mockMvc.perform(put("/api/v1/data/shorten")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(url)))
-                .andExpect(status().isMovedPermanently());
+                .andExpect(status().isCreated());
     }
 
     @Sql (
