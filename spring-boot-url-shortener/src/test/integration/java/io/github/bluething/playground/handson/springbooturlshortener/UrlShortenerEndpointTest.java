@@ -1,6 +1,7 @@
 package io.github.bluething.playground.handson.springbooturlshortener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.bluething.playground.handson.springbooturlshortener.config.UrlConfig;
 import io.github.bluething.playground.handson.springbooturlshortener.infrastructure.rest.LongUrlPayload;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,6 +30,8 @@ class UrlShortenerEndpointTest {
     private ObjectMapper objectMapper;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private UrlConfig urlConfig;
 
     @Sql (
             statements = "DELETE FROM url WHERE long_url = 'https://github.com/bluething'",
@@ -60,5 +64,22 @@ class UrlShortenerEndpointTest {
 
         Integer numOfRows = jdbcTemplate.queryForObject("select count(*) from url where long_url=?", Integer.class, url.url());
         Assertions.assertEquals(1, numOfRows);
+    }
+
+    @Sql (
+            statements = "DELETE FROM url WHERE long_url = 'https://github.com/bluething'",
+            config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED),
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+    )
+    @DisplayName("When we generate new shorter url, then a new row must be written in database")
+    @Test
+    void generateShorterUrlMustReturnShortenUrlWithBaseUrl() throws Exception {
+        LongUrlPayload url = new LongUrlPayload("https://github.com/bluething");
+        MvcResult result = mockMvc.perform(put("/api/v1/data/shorten")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(url)))
+                .andReturn();
+
+        Assertions.assertEquals(0, result.getResponse().getContentAsString().indexOf(urlConfig.getBaseUrl()));
     }
 }
