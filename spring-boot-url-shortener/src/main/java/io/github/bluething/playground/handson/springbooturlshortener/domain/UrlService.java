@@ -4,11 +4,12 @@ import io.github.bluething.playground.handson.springbooturlshortener.config.UrlC
 import io.github.bluething.playground.handson.springbooturlshortener.infrastructure.persistence.UrlEntity;
 import io.github.bluething.playground.handson.springbooturlshortener.infrastructure.persistence.UrlRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-final class UrlService implements Url{
+class UrlService implements Url{
     private final UrlRepository urlRepository;
     private final Codec codec;
     private final UrlConfig urlConfig;
@@ -24,6 +25,7 @@ final class UrlService implements Url{
     }
 
     @Override
+    @Cacheable("shortUrl")
     public String getLongUrl(String shortUrl) {
         return urlRepository.findUrlByShortUrl(shortUrl).getLongUrl();
     }
