@@ -7,7 +7,7 @@ create table if not exists url
     updated_date          timestamp,
     );
 
-create index url_long_url
+create unique index url_long_url
     on url (long_url);
 create index url_short_url
     on url (short_url);
